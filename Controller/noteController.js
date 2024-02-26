@@ -65,24 +65,26 @@ const deleteNote = async (req, res) => {
 };
 
 const updateNote = async (req, res) => {
-    const { title, Content, Category } = req.body;
-    const note =await Note.findById(req.params.id);
-    if(note.user.toString()!== req.user._id.toString()){
-      res.status(401);
-      throw new Error("You Cant Perform This Action");
-    }
-    if(note){
-      note.title = title;
-      note.Content=Content;
-      note.Category=Category;
-    
-    const UpdateNote= await note.save();
-    res.json(UpdateNote);
-    }
-    else{
-      res.status(404);
-      throw new Error('Not Found');
-    }
+  const { title, Content, Category } = req.body;
+
+  const note = await Note.findById(req.params.id);
+
+  if (note.user.toString() !== req.user._id.toString()) {
+    res.status(401);
+    throw new Error("You can't perform this action");
+  }
+
+  if (note) {
+    note.title = title;
+    note.Content = Content;
+    note.Category = Category;
+
+    const updatedNote = await note.save();
+    res.json(updatedNote);
+  } else {
+    res.status(404);
+    throw new Error("Note not found");
+  }
 };
 
 module.exports = { getNotes, createNote, deleteNote, updateNote ,getNoteById };
